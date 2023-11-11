@@ -16,6 +16,8 @@
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
 
+#include "Interfaces/EnemyInterface.h"
+
 AMainCharacterPlayerController::AMainCharacterPlayerController()
 {
 	bReplicates = true;
@@ -43,6 +45,45 @@ void AMainCharacterPlayerController::BeginPlay()
 	playerCharacter = Cast<AMainCharacter>(GetPawn());
 }
 
+void AMainCharacterPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	TraceCursor();
+}
+
+
+void AMainCharacterPlayerController::TraceCursor()
+{
+	FHitResult cursorHit;
+	GetHitResultUnderCursor(ECC_Visibility, false, cursorHit);
+	if (cursorHit.bBlockingHit)
+	{
+		lastActor = currentActor;
+		currentActor = Cast<IEnemyInterface>(cursorHit.GetActor());
+
+		if (!lastActor)
+		{
+			if(currentActor)
+				currentActor->HighlightActor();
+		}
+		else
+		{
+			if (!currentActor)
+				lastActor->UnHighlightActor();
+			else
+			{
+				if (lastActor != currentActor)
+				{
+					lastActor->UnHighlightActor();
+					currentActor->HighlightActor();
+				}
+			}
+		}
+	}
+}
+
+
+
 void AMainCharacterPlayerController::SetupInputComponent()
 {
 	// set up gameplay key bindings
@@ -66,6 +107,7 @@ void AMainCharacterPlayerController::SetupInputComponent()
 		*/
 
 		EnhancedInputComponent->BindAction(moveAction, ETriggerEvent::Triggered, this, &AMainCharacterPlayerController::Move);
+		UE_LOG(LogTemp, Warning, TEXT("Input Actions Binded"));
 	}
 	else
 	{
@@ -138,16 +180,17 @@ void AMainCharacterPlayerController::OnTouchReleased()
 
 void AMainCharacterPlayerController::Move(const FInputActionValue& InputActionValue)
 {
-	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
-	const FRotator Rotation = GetControlRotation();
-	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+	const FVector2D input = InputActionValue.Get<FVector2D>();
+	const FRotator rotation = GetControlRotation();
+	const FRotator yawRotation(0.f, rotation.Yaw, 0.f);
 
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	const FVector forwardDir = FRotationMatrix(yawRotation).GetUnitAxis(EAxis::X);
+	const FVector rightDir = FRotationMatrix(yawRotation).GetUnitAxis(EAxis::Y);
 
+	//UE_LOG(LogTemp, Warning, TEXT("Input: %s"), *input.ToString());
 	if (playerCharacter)
 	{
-		playerCharacter->AddMovementInput(ForwardDirection, InputAxisVector.Y);
-		playerCharacter->AddMovementInput(RightDirection, InputAxisVector.X);
+		playerCharacter->AddMovementInput(forwardDir, input.Y);
+		playerCharacter->AddMovementInput(rightDir, input.X);
 	}
 }

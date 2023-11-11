@@ -17,3 +17,8 @@ void ABaseCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 }
+
+UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
+{
+	return abilitySystemComponent;
+}

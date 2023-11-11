@@ -11,6 +11,7 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class UNiagaraSystem;
+class IEnemyInterface;
 
 UCLASS()
 class MALEDICTION_API AMainCharacterPlayerController : public APlayerController
@@ -20,6 +21,7 @@ class MALEDICTION_API AMainCharacterPlayerController : public APlayerController
 public:
 
 	AMainCharacterPlayerController();	
+	virtual void PlayerTick(float DeltaTime) override;
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -71,4 +73,8 @@ private:
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <UInputAction> SetDestinationTouchAction;
+
+	void TraceCursor();
+	IEnemyInterface* lastActor;
+	IEnemyInterface* currentActor;
 };

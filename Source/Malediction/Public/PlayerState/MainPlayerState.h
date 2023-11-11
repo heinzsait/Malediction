@@ -3,31 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "GameFramework/PlayerState.h"
 #include "AbilitySystemInterface.h"
-#include "BaseCharacter.generated.h"
+#include "MainPlayerState.generated.h"
+
 
 class UAbilitySystemComponent;
 class UAttributeSet;
 
 UCLASS()
-class MALEDICTION_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
+class MALEDICTION_API AMainPlayerState : public APlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
-	ABaseCharacter();
+
+	AMainPlayerState();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	FORCEINLINE UAttributeSet* GetAttributeSet() const { return attributeSet; }
-
-	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return weaponMesh; }
-
+	
 protected:
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TObjectPtr<USkeletalMeshComponent> weaponMesh;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> abilitySystemComponent;

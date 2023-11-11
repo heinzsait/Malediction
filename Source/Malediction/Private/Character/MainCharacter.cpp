@@ -5,6 +5,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "PlayerState/MainPlayerState.h"
+#include "AbilitySystem/CharacterAbilitySystemComponent.h"
 
 
 AMainCharacter::AMainCharacter()
@@ -19,6 +21,7 @@ AMainCharacter::AMainCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -32,4 +35,28 @@ AMainCharacter::AMainCharacter()
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+}
+
+void AMainCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	SetAbilitySystemAndAttribute();
+}
+
+void AMainCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	SetAbilitySystemAndAttribute();
+}
+
+void AMainCharacter::SetAbilitySystemAndAttribute()
+{
+	if (AMainPlayerState* playerState = GetPlayerState<AMainPlayerState>())
+	{
+		playerState->GetAbilitySystemComponent()->InitAbilityActorInfo(playerState, this);
+		abilitySystemComponent = playerState->GetAbilitySystemComponent();
+		attributeSet = playerState->GetAttributeSet();
+	}
 }
