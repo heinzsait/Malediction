@@ -16,9 +16,6 @@ class MALEDICTION_API UBaseUserWidget : public UUserWidget
 	
 public:
 
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UObject> widgetController;
-
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetController(UObject* _widgetController);
 
@@ -27,4 +24,8 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void WidgetControllerSet();
 
+private:
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObject> widgetController;
 };

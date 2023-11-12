@@ -16,6 +16,7 @@ class MALEDICTION_API ABaseCharacter : public ACharacter, public IAbilitySystemI
 	GENERATED_BODY()
 
 public:
+
 	ABaseCharacter();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -34,4 +35,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> attributeSet;
+
+private:
+
 };

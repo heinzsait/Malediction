@@ -7,6 +7,10 @@
 #include "MainHUD.generated.h"
 
 class UBaseUserWidget;
+class UOverlayWidgetController;
+struct FWidgetControllerParams;
+class UAbilitySystemComponent;
+class UAttributeSet;
 
 UCLASS()
 class MALEDICTION_API AMainHUD : public AHUD
@@ -15,13 +19,22 @@ class MALEDICTION_API AMainHUD : public AHUD
 public:
 
 	UPROPERTY()
-	TObjectPtr<UBaseUserWidget>  OverlayWidget;
+	TObjectPtr<UBaseUserWidget>  overlayWidget;
+
+	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& params);
+
+	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
 protected:
-	virtual void BeginPlay() override;
 
 private:
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UBaseUserWidget> OverlayWidgetClass;
+	TSubclassOf<UBaseUserWidget> overlayWidgetClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UOverlayWidgetController> overlayWidgetControllerClass;
+
+	UPROPERTY()
+	TObjectPtr<UOverlayWidgetController> overlayWidgetController;
 };

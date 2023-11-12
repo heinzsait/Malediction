@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerState/MainPlayerState.h"
 #include "AbilitySystem/CharacterAbilitySystemComponent.h"
+#include "UI/HUD/MainHUD.h"
 
 
 AMainCharacter::AMainCharacter()
@@ -58,5 +59,14 @@ void AMainCharacter::SetAbilitySystemAndAttribute()
 		playerState->GetAbilitySystemComponent()->InitAbilityActorInfo(playerState, this);
 		abilitySystemComponent = playerState->GetAbilitySystemComponent();
 		attributeSet = playerState->GetAttributeSet();
+
+		APlayerController* playerController = Cast<APlayerController>(GetController());
+		if (playerController)
+		{
+			if (AMainHUD* HUD = Cast<AMainHUD>(playerController->GetHUD()))
+			{
+				HUD->InitOverlay(playerController, playerState, abilitySystemComponent, attributeSet);
+			}
+		}
 	}
 }
