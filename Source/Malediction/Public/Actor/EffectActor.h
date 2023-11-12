@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "EffectActor.generated.h"
 
-class USphereComponent;
+class UGameplayEffect;
 
 UCLASS()
 class MALEDICTION_API AEffectActor : public AActor
@@ -17,21 +17,15 @@ public:
 	
 	AEffectActor();
 
-	UFUNCTION()
-	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	virtual void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 protected:
 	
 	virtual void BeginPlay() override;
 
 private:
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USphereComponent> sphere;
+	UFUNCTION(BlueprintCallable)
+	void ApplyEffectToTarget(AActor* targetActor, TSubclassOf<UGameplayEffect> gameplayEffectClass);
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> mesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UGameplayEffect> instantGameplayEffectClass;
 };

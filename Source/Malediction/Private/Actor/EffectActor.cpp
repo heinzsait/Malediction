@@ -5,40 +5,28 @@
 #include "Components/SphereComponent.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/CharacterAttributeSet.h"
+#include <AbilitySystemGlobals.h>
 
 AEffectActor::AEffectActor()
 {
  	PrimaryActorTick.bCanEverTick = false;
-
-	mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	SetRootComponent(mesh);
-
-	sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	sphere->SetupAttachment(GetRootComponent());
+	
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("Root"));
 }
 
 void AEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	sphere->OnComponentBeginOverlap.AddDynamic(this, &AEffectActor::OnOverlap);
-	sphere->OnComponentEndOverlap.AddDynamic(this, &AEffectActor::EndOverlap);
 }
 
-void AEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AEffectActor::ApplyEffectToTarget(AActor* targetActor, TSubclassOf<UGameplayEffect> gameplayEffectClass)
 {
-	if (IAbilitySystemInterface* interface = Cast<IAbilitySystemInterface>(OtherActor))
+	UAbilitySystemComponent* targetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(targetActor);
+	if (targetASC)
 	{
-		const UCharacterAttributeSet* attributeSet = Cast<UCharacterAttributeSet>(interface->GetAbilitySystemComponent()->GetAttributeSet(UCharacterAttributeSet::StaticClass()));
-
-		UCharacterAttributeSet* MutableAuraAttributeSet = const_cast<UCharacterAttributeSet*>(attributeSet);
-		MutableAuraAttributeSet->SetHealth(attributeSet->GetHealth() + 25.f);
-		MutableAuraAttributeSet->SetMana(attributeSet->GetMana() + 25.f);
-		Destroy();
+		FGameplayEffectContextHandle effectContextHandle = targetASC->MakeEffectContext();
+		effectContextHandle.AddSourceObject(this);
+		const FGameplayEffectSpecHandle effectSpecHandle = targetASC->MakeOutgoingSpec(gameplayEffectClass, 1.f, effectContextHandle);
+		targetASC->ApplyGameplayEffectSpecToSelf(*effectSpecHandle.Data.Get());
 	}
-}
-
-void AEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-
 }
