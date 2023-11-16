@@ -24,10 +24,8 @@ AEnemyCharacter::AEnemyCharacter()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	if (abilitySystemComponent)
-	{
-		abilitySystemComponent->InitAbilityActorInfo(this, this);
-	}
+
+	InitAbilitySystemAndAttribute();
 }
 
 void AEnemyCharacter::HighlightActor()
@@ -42,4 +40,15 @@ void AEnemyCharacter::UnHighlightActor()
 	highlighted = false;
 	GetMesh()->SetRenderCustomDepth(highlighted);
 	GetWeaponMesh()->SetRenderCustomDepth(highlighted);
+}
+
+void AEnemyCharacter::InitAbilitySystemAndAttribute()
+{	
+	if (abilitySystemComponent)
+	{
+		abilitySystemComponent->InitAbilityActorInfo(this, this);
+		if(UCharacterAbilitySystemComponent* charASC = Cast<UCharacterAbilitySystemComponent>(abilitySystemComponent))
+			charASC->ActorASCSet();
+				
+	}
 }

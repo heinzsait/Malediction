@@ -23,6 +23,8 @@ protected:
 
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	
+	virtual void InitAbilitySystemAndAttribute() override;
 
 private:
 

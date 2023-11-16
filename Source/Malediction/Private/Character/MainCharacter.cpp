@@ -42,23 +42,30 @@ void AMainCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	SetAbilitySystemAndAttribute();
+	InitAbilitySystemAndAttribute();
 }
 
 void AMainCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
-	SetAbilitySystemAndAttribute();
+	InitAbilitySystemAndAttribute();
 }
 
-void AMainCharacter::SetAbilitySystemAndAttribute()
+void AMainCharacter::InitAbilitySystemAndAttribute()
 {
 	if (AMainPlayerState* playerState = GetPlayerState<AMainPlayerState>())
 	{
 		playerState->GetAbilitySystemComponent()->InitAbilityActorInfo(playerState, this);
 		abilitySystemComponent = playerState->GetAbilitySystemComponent();
 		attributeSet = playerState->GetAttributeSet();
+
+		if(abilitySystemComponent)
+		{
+			UCharacterAbilitySystemComponent* charASC = Cast<UCharacterAbilitySystemComponent>(abilitySystemComponent);
+			if(charASC)
+				charASC->ActorASCSet();
+		}
 
 		APlayerController* playerController = Cast<APlayerController>(GetController());
 		if (playerController)

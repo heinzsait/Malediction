@@ -18,6 +18,11 @@ void ABaseCharacter::BeginPlay()
 	
 }
 
+void ABaseCharacter::InitAbilitySystemAndAttribute()
+{
+	
+}
+
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
 {
 	return abilitySystemComponent;

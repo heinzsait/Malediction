@@ -2,6 +2,8 @@
 
 
 #include "UI/WidgetController/OverlayWidgetController.h"
+
+#include "AbilitySystem/CharacterAbilitySystemComponent.h"
 #include "AbilitySystem/CharacterAttributeSet.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
@@ -23,6 +25,9 @@ void UOverlayWidgetController::BindCallbacks()
 		abilitySystemComponent->GetGameplayAttributeValueChangeDelegate(characterAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChanged);
 		abilitySystemComponent->GetGameplayAttributeValueChangeDelegate(characterAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
 		abilitySystemComponent->GetGameplayAttributeValueChangeDelegate(characterAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+
+		if(UCharacterAbilitySystemComponent* charASC = Cast<UCharacterAbilitySystemComponent>(abilitySystemComponent))
+			charASC->effectAssetTagDelegate.AddUObject(this, &UOverlayWidgetController::EffectApplied);
 	}
 }
 
@@ -44,4 +49,17 @@ void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) c
 void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxManaChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::EffectApplied(const FGameplayTagContainer& gameplayTagContainer)
+{
+	for(FGameplayTag tag : gameplayTagContainer)
+	{
+		if(tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Message"))))
+		{
+			//if(GEngine)	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("GE Tag: %s"), *tag.ToString()));
+			FWidgetRow* row = GetDataTableRowByTag<FWidgetRow>(messageWidgetDT, tag);
+			MessageWidgetRow.Broadcast(*row);
+		}
+	}
 }
