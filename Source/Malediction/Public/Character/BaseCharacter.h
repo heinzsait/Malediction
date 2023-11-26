@@ -9,6 +9,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
 
 UCLASS()
 class MALEDICTION_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -38,6 +39,11 @@ protected:
 
 	
 	virtual void InitAbilitySystemAndAttribute();
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> defaultPrimaryAttributes;
+
+	void InitializePrimaryAttributes() const;
 
 private:
 

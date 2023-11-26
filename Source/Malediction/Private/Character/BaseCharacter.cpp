@@ -2,6 +2,8 @@
 
 
 #include "Character/BaseCharacter.h"
+#include "AbilitySystemComponent.h"
+#include "GameplayEffectTypes.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -21,6 +23,16 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::InitAbilitySystemAndAttribute()
 {
 	
+}
+
+void ABaseCharacter::InitializePrimaryAttributes() const
+{
+	if(GetAbilitySystemComponent() && defaultPrimaryAttributes)
+	{
+		const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+		const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(defaultPrimaryAttributes, 1.f, ContextHandle);
+		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+	}
 }
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const

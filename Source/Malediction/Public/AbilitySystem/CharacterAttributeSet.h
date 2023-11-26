@@ -119,6 +119,70 @@ public:
 	
 	UFUNCTION()
 	void OnRep_Vigor(const FGameplayAttributeData& oldVigor) const;
+
+
+	//Secondary Stats...
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor)
+	FGameplayAttributeData Armor;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, Armor);
+	
+	UFUNCTION()
+	void OnRep_Armor(const FGameplayAttributeData& oldArmor) const;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ArmorPenetration)
+	FGameplayAttributeData ArmorPenetration;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, ArmorPenetration);
+	
+	UFUNCTION()
+	void OnRep_ArmorPenetration(const FGameplayAttributeData& oldArmorPenetration) const;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BlockChance)
+	FGameplayAttributeData BlockChance;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, BlockChance);
+	
+	UFUNCTION()
+	void OnRep_BlockChance(const FGameplayAttributeData& oldBlockChance) const;
+
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalHitChance)
+	FGameplayAttributeData CriticalHitChance;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, CriticalHitChance);
+	
+	UFUNCTION()
+	void OnRep_CriticalHitChance(const FGameplayAttributeData& oldCriticalHitChance) const;
+
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalHitDamage)
+	FGameplayAttributeData CriticalHitDamage;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, CriticalHitDamage);
+	
+	UFUNCTION()
+	void OnRep_CriticalHitDamage(const FGameplayAttributeData& oldCriticalHitDamage) const;
+
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalHitResistance)
+	FGameplayAttributeData CriticalHitResistance;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, CriticalHitResistance);
+	
+	UFUNCTION()
+	void OnRep_CriticalHitResistance(const FGameplayAttributeData& oldCriticalHitResistance) const;
+
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegeneration)
+	FGameplayAttributeData HealthRegeneration;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, HealthRegeneration);
+	
+	UFUNCTION()
+	void OnRep_HealthRegeneration(const FGameplayAttributeData& oldHealthRegeneration) const;
+
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration)
+	FGameplayAttributeData ManaRegeneration;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, ManaRegeneration);
+	
+	UFUNCTION()
+	void OnRep_ManaRegeneration(const FGameplayAttributeData& oldManaRegeneration) const;
 	
 private:
 	static void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);

@@ -76,4 +76,5 @@ void AMainCharacter::InitAbilitySystemAndAttribute()
 			}
 		}
 	}
+	InitializePrimaryAttributes();
 }
