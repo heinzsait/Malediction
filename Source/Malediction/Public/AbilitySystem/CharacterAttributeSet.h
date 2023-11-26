@@ -8,10 +8,10 @@
 #include "CharacterAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 
 USTRUCT()
@@ -71,10 +71,10 @@ public:
 	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, MaxHealth);
 
 	UFUNCTION()
-	void OnRep_Health(const FGameplayAttributeData& oldHealth);
+	void OnRep_Health(const FGameplayAttributeData& oldHealth) const;
 
 	UFUNCTION()
-	void OnRep_MaxHealth(const FGameplayAttributeData& oldMaxHealth);
+	void OnRep_MaxHealth(const FGameplayAttributeData& oldMaxHealth) const;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana)
 	FGameplayAttributeData Mana;
@@ -85,13 +85,42 @@ public:
 	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, MaxMana);
 
 	UFUNCTION()
-	void OnRep_Mana(const FGameplayAttributeData& oldMana);
+	void OnRep_Mana(const FGameplayAttributeData& oldMana) const;
 
 	UFUNCTION()
-	void OnRep_MaxMana(const FGameplayAttributeData& oldMaxMana);
+	void OnRep_MaxMana(const FGameplayAttributeData& oldMaxMana) const;
 
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength)
+	FGameplayAttributeData Strength;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, Strength);
+	
+	UFUNCTION()
+	void OnRep_Strength(const FGameplayAttributeData& oldStrength) const;
+
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Intelligence)
+	FGameplayAttributeData Intelligence;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, Intelligence);
+	
+	UFUNCTION()
+	void OnRep_Intelligence(const FGameplayAttributeData& oldIntelligence) const;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resilience)
+	FGameplayAttributeData Resilience;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, Resilience);
+	
+	UFUNCTION()
+	void OnRep_Resilience(const FGameplayAttributeData& oldResilience) const;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Vigor)
+	FGameplayAttributeData Vigor;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, Vigor);
+	
+	UFUNCTION()
+	void OnRep_Vigor(const FGameplayAttributeData& oldVigor) const;
+	
 private:
-
-	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
+	static void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);
 
 };

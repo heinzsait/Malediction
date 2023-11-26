@@ -25,6 +25,12 @@ void UCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Strength, COND_None, REPNOTIFY_Always);	
+	DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);	
+	DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Resilience, COND_None, REPNOTIFY_Always);	
+	DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 }
 
 
@@ -34,11 +40,11 @@ void UCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attrib
 
 	if (Attribute == GetHealthAttribute())
 	{
-		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
 	}
 	if (Attribute == GetManaAttribute())
 	{
-		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
 	}
 }
 
@@ -48,10 +54,20 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 
 	FEffectProperties effectProperties;
 	SetEffectProperties(Data, effectProperties);
+
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
+	
 }
 
 
-void UCharacterAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& effectProperties) const
+void UCharacterAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& effectProperties)
 {
 	
 	effectProperties.effectContextHandle = Data.EffectSpec.GetContext();
@@ -81,22 +97,42 @@ void UCharacterAttributeSet::SetEffectProperties(const FGameplayEffectModCallbac
 }
 
 
-void UCharacterAttributeSet::OnRep_Health(const FGameplayAttributeData& oldHealth)
+void UCharacterAttributeSet::OnRep_Health(const FGameplayAttributeData& oldHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, Health, oldHealth);
 }
 
-void UCharacterAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& oldMaxHealth)
+void UCharacterAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& oldMaxHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, MaxHealth, oldMaxHealth);
 }
 
-void UCharacterAttributeSet::OnRep_Mana(const FGameplayAttributeData& oldMana)
+void UCharacterAttributeSet::OnRep_Mana(const FGameplayAttributeData& oldMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, Mana, oldMana);
 }
 
-void UCharacterAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& oldMaxMana)
+void UCharacterAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& oldMaxMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, MaxMana, oldMaxMana);
+}
+
+void UCharacterAttributeSet::OnRep_Strength(const FGameplayAttributeData& oldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, Strength, oldStrength);
+}
+
+void UCharacterAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& oldIntelligence) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, Intelligence, oldIntelligence);
+}
+
+void UCharacterAttributeSet::OnRep_Resilience(const FGameplayAttributeData& oldResilience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, Resilience, oldResilience);
+}
+
+void UCharacterAttributeSet::OnRep_Vigor(const FGameplayAttributeData& oldVigor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSet, Vigor, oldVigor);
 }
