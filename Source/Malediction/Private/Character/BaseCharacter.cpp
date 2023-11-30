@@ -14,6 +14,7 @@ ABaseCharacter::ABaseCharacter()
 	weaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,14 +26,30 @@ void ABaseCharacter::InitAbilitySystemAndAttribute()
 	
 }
 
-void ABaseCharacter::InitializePrimaryAttributes() const
+void ABaseCharacter::ApplyEffect(TSubclassOf<UGameplayEffect> effectClass, float level) const
 {
-	if(GetAbilitySystemComponent() && defaultPrimaryAttributes)
+	if(GetAbilitySystemComponent() && effectClass)
 	{
-		const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
-		const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(defaultPrimaryAttributes, 1.f, ContextHandle);
+		FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+		ContextHandle.AddSourceObject(this);
+		const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(effectClass, level, ContextHandle);
 		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 	}
+}
+
+void ABaseCharacter::InitializePrimaryAttributes() const
+{
+	ApplyEffect(defaultPrimaryAttributes, 1.0f);
+}
+
+void ABaseCharacter::InitializeSecondaryAttributes() const
+{
+	ApplyEffect(defaultSecondaryAttributes, 1.0f);
+}
+
+void ABaseCharacter::InitializeLifeAttributes() const
+{
+	ApplyEffect(defaultLifeAttributes, 1.0f);
 }
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const

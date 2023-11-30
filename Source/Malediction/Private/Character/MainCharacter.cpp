@@ -45,6 +45,16 @@ void AMainCharacter::PossessedBy(AController* NewController)
 	InitAbilitySystemAndAttribute();
 }
 
+int32 AMainCharacter::GetPlayerLevel()
+{
+	if (AMainPlayerState* playerState = GetPlayerState<AMainPlayerState>())
+	{
+		return playerState->GetPlayerLevel();
+	}
+	else
+		return 0;
+}
+
 void AMainCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
@@ -77,4 +87,6 @@ void AMainCharacter::InitAbilitySystemAndAttribute()
 		}
 	}
 	InitializePrimaryAttributes();
+	InitializeSecondaryAttributes();
+	InitializeLifeAttributes();
 }

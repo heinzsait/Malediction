@@ -18,6 +18,8 @@ public:
 
 	AEnemyCharacter();
 	virtual void BeginPlay() override;
+
+	virtual int32 GetPlayerLevel() override;
 	
 protected:
 
@@ -25,6 +27,9 @@ protected:
 	virtual void UnHighlightActor() override;
 	
 	virtual void InitAbilitySystemAndAttribute() override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 level = 1;
 
 private:
 

@@ -10,10 +10,8 @@
 
 UCharacterAttributeSet::UCharacterAttributeSet()
 {
-	InitHealth(50);
-	InitMaxHealth(100);
-	InitMana(50);
-	InitMaxMana(100);
+	//InitHealth(50);
+	//InitMana(50);
 }
 
 void UCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

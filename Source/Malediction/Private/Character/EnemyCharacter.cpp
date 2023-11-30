@@ -28,6 +28,11 @@ void AEnemyCharacter::BeginPlay()
 	InitAbilitySystemAndAttribute();
 }
 
+int32 AEnemyCharacter::GetPlayerLevel()
+{
+	return level;
+}
+
 void AEnemyCharacter::HighlightActor()
 {
 	highlighted = true;
@@ -52,3 +57,4 @@ void AEnemyCharacter::InitAbilitySystemAndAttribute()
 				
 	}
 }
+

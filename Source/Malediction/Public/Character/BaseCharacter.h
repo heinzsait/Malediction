@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Interfaces/CombatInterface.h"
 #include "BaseCharacter.generated.h"
 
 class UAbilitySystemComponent;
@@ -12,7 +13,7 @@ class UAttributeSet;
 class UGameplayEffect;
 
 UCLASS()
-class MALEDICTION_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
+class MALEDICTION_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -24,6 +25,7 @@ public:
 	FORCEINLINE UAttributeSet* GetAttributeSet() const { return attributeSet; }
 
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return weaponMesh; }
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -39,11 +41,22 @@ protected:
 
 	
 	virtual void InitAbilitySystemAndAttribute();
+	
+	void ApplyEffect(TSubclassOf<UGameplayEffect> effectClass, float level) const;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> defaultPrimaryAttributes;
 
 	void InitializePrimaryAttributes() const;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> defaultSecondaryAttributes;
+	
+	void InitializeSecondaryAttributes() const;
+	void InitializeLifeAttributes() const;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> defaultLifeAttributes;
 
 private:
 
